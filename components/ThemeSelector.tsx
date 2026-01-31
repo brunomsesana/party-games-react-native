@@ -21,60 +21,62 @@ export default function ThemeSelector({
   }
 
   return (
-    <View style={styles.container}>
-      <View>
+    <View style={styles.bg}>
+      <View style={styles.container}>
+        <View>
+          <TouchableOpacity
+            style={{ alignSelf: "flex-end" }}
+            onPress={() => setOpen(false)}
+          >
+            <TextP>X</TextP>
+          </TouchableOpacity>
+          <TextP style={{ fontSize: 30, textAlign: "center" }}>
+            {t("themes")}:
+          </TextP>
+        </View>
+        <View>
+          {Object.keys(t("undercoverWords", { returnObjects: true })).map(
+            (x, i) => (
+              <TouchableOpacity
+                style={[
+                  styles.button,
+                  tempUndercoverConfig.themes.includes(i) && {
+                    backgroundColor: "lightgreen",
+                    borderColor: "green",
+                    borderWidth: 2,
+                  },
+                ]}
+                key={i}
+                onPress={() => {
+                  let tempConfig = { ...tempUndercoverConfig };
+                  if (tempUndercoverConfig.themes.includes(i)) {
+                    tempConfig.themes.splice(
+                      tempConfig.themes.findIndex((y) => y == i),
+                      1,
+                    );
+                  } else {
+                    tempConfig.themes.push(i);
+                  }
+                  setTempUndercoverConfig(tempConfig);
+                }}
+              >
+                <TextP style={{ textAlign: "center" }}>{x}</TextP>
+              </TouchableOpacity>
+            ),
+          )}
+        </View>
         <TouchableOpacity
-          style={{ alignSelf: "flex-end" }}
-          onPress={() => setOpen(false)}
+          style={[
+            styles.button,
+            { backgroundColor: "#341272", borderColor: "black" },
+          ]}
+          onPress={handleSave}
         >
-          <TextP>X</TextP>
+          <TextP style={{ textAlign: "center", color: "white" }}>
+            {t("save")}
+          </TextP>
         </TouchableOpacity>
-        <TextP style={{ fontSize: 30, textAlign: "center" }}>
-          {t("themes")}:
-        </TextP>
       </View>
-      <View>
-        {Object.keys(t("undercoverWords", { returnObjects: true })).map(
-          (x, i) => (
-            <TouchableOpacity
-              style={[
-                styles.button,
-                tempUndercoverConfig.themes.includes(i) && {
-                  backgroundColor: "lightgreen",
-                  borderColor: "green",
-                  borderWidth: 2,
-                },
-              ]}
-              key={i}
-              onPress={() => {
-                let tempConfig = { ...tempUndercoverConfig };
-                if (tempUndercoverConfig.themes.includes(i)) {
-                  tempConfig.themes.splice(
-                    tempConfig.themes.findIndex((y) => y == i),
-                    1,
-                  );
-                } else {
-                  tempConfig.themes.push(i);
-                }
-                setTempUndercoverConfig(tempConfig);
-              }}
-            >
-              <TextP style={{ textAlign: "center" }}>{x}</TextP>
-            </TouchableOpacity>
-          ),
-        )}
-      </View>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          { backgroundColor: "#341272", borderColor: "black" },
-        ]}
-        onPress={handleSave}
-      >
-        <TextP style={{ textAlign: "center", color: "white" }}>
-          {t("save")}
-        </TextP>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "absolute",
-    zIndex: 1,
+    zIndex: 2,
     backgroundColor: "#c0d9e3",
     top: "10%",
     bottom: "10%",
@@ -102,5 +104,15 @@ const styles = StyleSheet.create({
     borderColor: "grey",
     borderWidth: 1,
     marginBottom: 10,
+  },
+  bg: {
+    flex: 1,
+    backgroundColor: "#00000080",
+    zIndex: 1,
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });

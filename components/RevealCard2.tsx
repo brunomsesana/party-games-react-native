@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -13,20 +13,10 @@ import TextP from "./TextP";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
-export default function RevealCard({
+export default function RevealCard2({
   children,
-  players,
-  turn,
-  pressed,
-  setPressed,
-  theme,
 }: {
   children: React.ReactNode;
-  players: string[];
-  turn: number;
-  pressed: boolean;
-  setPressed: (pressed: boolean) => void;
-  theme: string;
 }) {
   const translateY = useSharedValue(0);
   const context = useSharedValue(0);
@@ -40,8 +30,8 @@ export default function RevealCard({
       translateY.value = Math.min(0, context.value + event.translationY);
     })
     .onEnd(() => {
-      if (translateY.value < -150) {
-        translateY.value = withSpring(-300);
+      if (translateY.value < -300) {
+        translateY.value = withSpring(-SCREEN_HEIGHT + 60);
       } else {
         translateY.value = withSpring(0);
       }
@@ -63,24 +53,14 @@ export default function RevealCard({
     return { opacity };
   });
 
-  useEffect(() => {
-    translateY.value = withSpring(0);
-    setPressed(false);
-  }, [pressed]);
-
   return (
     <View style={styles.container}>
-      {/* O que está EMBAIXO (a palavra secreta) */}
       <View style={styles.secretContent}>{children}</View>
 
-      {/* A CAPA que arrasta */}
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.cover, animatedStyle]}>
           <Animated.View style={textStyle}>
-            <TextP style={styles.subText}>
-              {t("theme")}: {theme}
-            </TextP>
-            <TextP style={styles.coverText}>{players[turn]}</TextP>
+            <TextP style={styles.coverText}>E o infiltrado é...</TextP>
             <TextP style={styles.subText}>{t("dragUp")}</TextP>
           </Animated.View>
           <View style={styles.handle} />
@@ -97,7 +77,7 @@ const styles = StyleSheet.create({
   },
   secretContent: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#c0d9e3",
     paddingBottom: 100,

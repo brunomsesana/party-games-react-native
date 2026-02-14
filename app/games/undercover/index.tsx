@@ -3,21 +3,27 @@ import TextP from "@/components/TextP";
 import ThemeSelector from "@/components/ThemeSelector";
 import { GamesContext } from "@/contexts/GamesContext";
 import { PlayerContext } from "@/contexts/PlayersContext";
-import { useNavigation } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
-import { useContext, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { BannerAd, BannerAdSize, TestIds, useForeground } from "react-native-google-mobile-ads";
 
 export default function Undercover() {
-  const navigation = useNavigation();
   const { undercoverConfig, setUndercoverConfig } = useContext(GamesContext);
-  const { players } = useContext(PlayerContext);
+  const { players, updatePlayers, isAdFree } = useContext(PlayerContext);
   const { t } = useTranslation();
   const [selectorOpen, setSelectorOpen] = useState(false);
   const themes = Object.keys(t("undercoverWords", { returnObjects: true }));
   const [rulesOpen, setRulesOpen] = useState(false);
   const [scoreOpen, setScoreOpen] = useState(false);
+  const bannerRef = useRef<BannerAd>(null);
+  const router = useRouter();
+  useForeground(() => {
+    if (!isAdFree && bannerRef.current) {
+      bannerRef.current.load();
+    }
+  });
 
   useEffect(() => {
     if (players.length >= 3) {
@@ -104,6 +110,13 @@ export default function Undercover() {
                 {t("score")}:
               </TextP>
             </View>
+            {undercoverConfig.scoring && <View style={{ borderBottomColor: "black", borderBottomWidth: 1, marginBottom: 10, padding: 10, alignItems: "center" }}>
+              {players.map((x, i) => <TextP style={{ textAlign: "center" }} key={i}>{x.name}: {x.undercoverScore}</TextP>)}
+              <TouchableOpacity onPress={() => {
+                let playersTemp = players.map(x => ({ ...x, undercoverScore: 0 }))
+                updatePlayers(playersTemp);
+              }} style={[styles.button, { marginTop: 15 }]}><TextP style={{ textAlign: "center" }}>{t("resetScore")}</TextP></TouchableOpacity>
+            </View>}
             <TextP
               style={{
                 textAlign: "center",
@@ -159,7 +172,7 @@ export default function Undercover() {
           <ThemeSelector setOpen={setSelectorOpen}></ThemeSelector>
         )}
         <View
-          style={{ marginTop: 150, marginBottom: 70, alignItems: "center" }}
+          style={{ marginBottom: 70, alignItems: "center" }}
         >
           <TextP
             style={{
@@ -182,7 +195,7 @@ export default function Undercover() {
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "center",
               width: "45%",
             }}
           >
@@ -208,14 +221,14 @@ export default function Undercover() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigate("/playersConfig");
+              router.push("/playersConfig");
             }}
           >
             <TextP style={{ textAlign: "center" }}>
               {t("configurePlayers")}
             </TextP>
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[
               styles.button,
               players.length < 3 &&
@@ -225,6 +238,47 @@ export default function Undercover() {
                   cursor: "not-allowed",
                   opacity: 0.5,
                 } as any),
+            ]}
+            disabled={players.length < 3}
+            onPress={() => {
+              setUndercoverConfig({
+                ...undercoverConfig,
+                time:
+                  undercoverConfig.time >= 60 ? 0 : (undercoverConfig.time +
+                  5),
+              });
+            }}
+          >
+            <TextP style={{ textAlign: "center" }}>
+              {t("time")}: {undercoverConfig.time == 0 ? t("disabled") : undercoverConfig.time + " " + t("seconds")}
+            </TextP>
+          </TouchableOpacity> */}
+
+          <TouchableOpacity
+            style={[
+              styles.button
+            ]}
+            onPress={() => {
+              setUndercoverConfig({
+                ...undercoverConfig,
+                scoring: !undercoverConfig.scoring,
+              });
+            }}
+          >
+            <TextP style={{ textAlign: "center" }}>
+              {t("scoreEnabled")}: {undercoverConfig.scoring ? t("yes") : t("no")}
+            </TextP>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              players.length < 3 &&
+              ({
+                backgroundColor: "#a1a1a1",
+                borderColor: "black",
+                cursor: "not-allowed",
+                opacity: 0.5,
+              } as any),
             ]}
             disabled={players.length < 3}
             onPress={() => {
@@ -256,14 +310,13 @@ export default function Undercover() {
             <TextP style={{ textAlign: "center" }}>
               {undercoverConfig.themes.length > 0
                 ? t("themes") +
-                  ": " +
-                  undercoverConfig.themes.map((x) => themes[x]).join(", ")
+                ": " +
+                undercoverConfig.themes.map((x) => themes[x]).join(", ")
                 : t("selectThemes")}
             </TextP>
           </TouchableOpacity>
           <View
             style={{
-              flex: 1,
               width: "100%",
               alignItems: "center",
               marginTop: "7%",
@@ -277,7 +330,7 @@ export default function Undercover() {
                   borderColor: "black",
                   opacity:
                     undercoverConfig.themes.length <= 0 ||
-                    undercoverConfig.undercoverCount <= 0
+                      undercoverConfig.undercoverCount <= 0
                       ? 0.5
                       : 1,
                 },
@@ -286,7 +339,7 @@ export default function Undercover() {
                 undercoverConfig.themes.length <= 0 ||
                 undercoverConfig.undercoverCount <= 0
               }
-              onPress={() => navigate("/games/undercover/play")}
+              onPress={() => router.push("/games/undercover/play")}
             >
               <TextP style={{ textAlign: "center", color: "white" }}>
                 {t("play")}
@@ -296,6 +349,8 @@ export default function Undercover() {
           </View>
         </View>
       </View>
+      {!isAdFree &&
+        <BannerAd ref={bannerRef} unitId={__DEV__ ? TestIds.ADAPTIVE_BANNER : "ca-app-pub-3794910185024045/6360357076"} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />}
     </>
   );
 }
@@ -304,14 +359,13 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#8f6fe0",
     flex: 1,
+    justifyContent: "center",
   },
   main: {
-    flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
   },
   button: {
-    textAlign: "center",
     backgroundColor: "white",
     width: "50%",
     padding: 10,
@@ -326,6 +380,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#341272",
     borderRadius: 8,
+    margin: 5
   },
   bg: {
     zIndex: 1,

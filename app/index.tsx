@@ -1,8 +1,9 @@
 import Bg1 from "@/assets/vectors/bg_1.svg";
 import Bg2 from "@/assets/vectors/bg_2.svg";
 import TextP from "@/components/TextP";
-import { navigate } from "expo-router/build/global-state/routing";
-import { useRef, useState } from "react";
+import { PlayerContext } from "@/contexts/PlayersContext";
+import { useRouter } from "expo-router";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Animated,
@@ -10,8 +11,25 @@ import {
   Text,
   TouchableOpacity,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
+import Purchases from "react-native-purchases";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
+
+async function presentPaywall(): Promise<boolean> {
+  const paywallResult: PAYWALL_RESULT = await RevenueCatUI.presentPaywall();
+  switch (paywallResult) {
+    case PAYWALL_RESULT.NOT_PRESENTED:
+    case PAYWALL_RESULT.ERROR:
+    case PAYWALL_RESULT.CANCELLED:
+      return false;
+    case PAYWALL_RESULT.PURCHASED:
+    case PAYWALL_RESULT.RESTORED:
+      return true;
+    default:
+      return false;
+  }
+}
 
 export default function Index() {
   const { width, height } = useWindowDimensions();
@@ -24,23 +42,34 @@ export default function Index() {
   const growAnim = useRef(new Animated.Value(0)).current;
   const growAnim2 = useRef(new Animated.Value(0)).current;
   const { t, i18n } = useTranslation();
+  const {isAdFree, setIsAdFree} = useContext(PlayerContext);
+  const router = useRouter()
+
+  useEffect(() => {
+    const apiKey = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY;
+    if (apiKey) {
+      Purchases.configure({ apiKey });
+    }
+  }, [])
 
   function playHandler() {
     setZIndexBg1(1);
     Animated.timing(growAnim, {
       toValue: 1,
       duration: 1000,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
     setTimeout(() => {
-      navigate("/games");
+      router.push("/games");
+    }, 1000);
+    setTimeout(() => {
       Animated.timing(growAnim, {
         toValue: 0,
         duration: 1000,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
       setZIndexBg1(-1);
-    }, 1000);
+    }, 3000);
   }
   const currentSvgSize = growAnim.interpolate({
     inputRange: [0, 1],
@@ -51,17 +80,19 @@ export default function Index() {
     Animated.timing(growAnim2, {
       toValue: 1,
       duration: 1000,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
     setTimeout(() => {
-      navigate("/playersConfig");
+      router.push("/playersConfig");
+    }, 1000);
+    setTimeout(() => {
       Animated.timing(growAnim2, {
         toValue: 0,
         duration: 1000,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
       setZIndexBg2(-1);
-    }, 1000);
+    }, 3000);
   }
   function changeLanguageHandler() {
     const availableLanguages = Object.keys(i18n.services.resourceStore.data);
@@ -76,6 +107,22 @@ export default function Index() {
     inputRange: [0, 1],
     outputRange: [1, 20],
   });
+  async function goAdFreeHandler() {
+    const purchased = await presentPaywall();
+    if (purchased) {
+      setIsAdFree(true);
+    }
+  }
+  async function restorePurchasesHandler() {
+    try {
+      const purchaserInfo = await Purchases.restorePurchases();
+      if (purchaserInfo.activeSubscriptions.length > 0 || purchaserInfo.entitlements.active['NOME_DO_SEU_ENTITLEMENT_NO_DASHBOARD']) {
+         setIsAdFree(true);
+      }
+    } catch (e) {
+      alert("Erro ao restaurar compras.");
+    }
+  }
 
   return (
     <>
@@ -134,9 +181,33 @@ export default function Index() {
             onPress={changeLanguageHandler}
           >
             <TextP style={{ textAlign: "center" }}>
-              {t("language")}: {t(i18n.language)}
+              {t("language")}: {t(i18n.resolvedLanguage ?? "en")}
             </TextP>
           </TouchableOpacity>
+          {!isAdFree ? 
+          <>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={goAdFreeHandler}
+            >
+            <TextP style={{ textAlign: "center" }}>
+              {t("goAdFree")}
+            </TextP>
+          </TouchableOpacity> 
+          <TouchableOpacity onPress={restorePurchasesHandler} style={{ marginTop: 10 }}>
+            <TextP style={{ textAlign: "center", fontSize: 12, textDecorationLine: 'underline' }}>
+              {t("restorePurchases")}
+            </TextP>
+          </TouchableOpacity>
+          </>
+          : __DEV__ && <TouchableOpacity
+            style={styles.button}
+            onPress={() => setIsAdFree(false)}
+          >
+            <TextP style={{ textAlign: "center" }}>
+              Sair do Ad Free
+            </TextP>
+          </TouchableOpacity>}
         </View>
       </View>
     </>
@@ -148,7 +219,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#c0d9e3",
     overflow: "hidden",
-    fontFamily: "Poppins",
   },
   svgWrapper: {
     position: "absolute",

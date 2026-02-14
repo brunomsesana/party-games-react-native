@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Dimensions, StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View, ViewStyle } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolation,
@@ -20,6 +20,7 @@ export default function RevealCard({
   pressed,
   setPressed,
   theme,
+  innerStyle,
 }: {
   children: React.ReactNode;
   players: string[];
@@ -27,6 +28,7 @@ export default function RevealCard({
   pressed: boolean;
   setPressed: (pressed: boolean) => void;
   theme: string;
+  innerStyle?: ViewStyle;
 }) {
   const translateY = useSharedValue(0);
   const context = useSharedValue(0);
@@ -71,7 +73,7 @@ export default function RevealCard({
   return (
     <View style={styles.container}>
       {/* O que está EMBAIXO (a palavra secreta) */}
-      <View style={styles.secretContent}>{children}</View>
+      <View style={[styles.secretContent, innerStyle]}>{children}</View>
 
       {/* A CAPA que arrasta */}
       <GestureDetector gesture={gesture}>
@@ -107,8 +109,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#594294",
     justifyContent: "center",
     alignItems: "center",
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
   },
   coverText: {
     color: "white",

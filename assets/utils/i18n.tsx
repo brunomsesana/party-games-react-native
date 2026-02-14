@@ -26,9 +26,11 @@ i18n
   .init({
     compatibilityJSON: "v4",
     fallbackLng: "en-US",
+    supportedLngs: ["en", "pt"],
+    nonExplicitSupportedLngs: true,
     resources: {
-      "en-US": { translation: enUs },
-      "pt-BR": { translation: ptBr },
+      "en": { translation: enUs },
+      "pt": { translation: ptBr },
     },
     react: {
       useSuspense: false,

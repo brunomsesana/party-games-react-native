@@ -14,8 +14,10 @@ import TextP from "./TextP";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function RevealCard2({
+  text,
   children,
 }: {
+  text: string,
   children: React.ReactNode;
 }) {
   const translateY = useSharedValue(0);
@@ -60,7 +62,7 @@ export default function RevealCard2({
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.cover, animatedStyle]}>
           <Animated.View style={textStyle}>
-            <TextP style={styles.coverText}>E o infiltrado é...</TextP>
+            <TextP style={styles.coverText}>{text}</TextP>
             <TextP style={styles.subText}>{t("dragUp")}</TextP>
           </Animated.View>
           <View style={styles.handle} />

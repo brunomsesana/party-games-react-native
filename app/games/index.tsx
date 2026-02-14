@@ -1,20 +1,29 @@
 import BackButton from "@/components/BackButton";
 import TextP from "@/components/TextP";
-import { useNavigation } from "expo-router";
-import { navigate } from "expo-router/build/global-state/routing";
-import { useEffect, useRef } from "react";
+import { PlayerContext } from "@/contexts/PlayersContext";
+import { useNavigation, useRouter } from "expo-router";
+import { useContext, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Animated, StyleSheet, TouchableOpacity, View } from "react-native";
+import { BannerAd, BannerAdSize, TestIds, useForeground } from "react-native-google-mobile-ads";
 
 export default function Games() {
   const opacityAnim = useRef(new Animated.Value(0)).current;
   const navigation = useNavigation();
+  const { isAdFree } = useContext(PlayerContext);
+  const bannerRef = useRef<BannerAd>(null);
   const { t } = useTranslation();
+  const router = useRouter();
+  useForeground(() => {
+    if (!isAdFree && bannerRef.current) {
+      bannerRef.current.load();
+    }
+  });
   useEffect(() => {
     Animated.timing(opacityAnim, {
       toValue: 1,
       duration: 1000,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
   }, []);
   const currentOpacity = opacityAnim.interpolate({
@@ -38,7 +47,7 @@ export default function Games() {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              navigate("/games/undercover");
+              router.push("/games/undercover");
             }}
           >
             <TextP style={{ textAlign: "center" }}>{t("undercover")}</TextP>
@@ -62,6 +71,8 @@ export default function Games() {
           <BackButton back="/" tryBack={false} />
         </View>
       </Animated.View>
+      {!isAdFree &&
+        <BannerAd ref={bannerRef} unitId={__DEV__ ? TestIds.ADAPTIVE_BANNER : "ca-app-pub-3794910185024045/9261852580"} size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} />}
     </View>
   );
 }

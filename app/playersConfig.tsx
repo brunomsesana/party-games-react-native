@@ -24,7 +24,7 @@ export default function PlayersConfig() {
     Animated.timing(opacityAnim, {
       toValue: 1,
       duration: 1000,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
   }, []);
   const currentOpacity = opacityAnim.interpolate({
@@ -33,7 +33,7 @@ export default function PlayersConfig() {
   });
   function handleAddPlayer() {
     if (newPlayer && newPlayer.trim().length > 0) {
-      updatePlayers([...players, newPlayer.trim()]);
+      updatePlayers([...players, {name: newPlayer.trim(), undercoverScore: 0, sleepingCityScore: 0, classifiedScore: 0}]);
       setNewPlayer("");
     }
   }
@@ -71,7 +71,7 @@ export default function PlayersConfig() {
                       },
                     ]}
                   >
-                    <TextP>{x}</TextP>
+                    <TextP>{x.name}</TextP>
                     <TouchableOpacity onPress={() => handleRemovePlayer(i)}>
                       <TrashIcon width={30} height={30}></TrashIcon>
                     </TouchableOpacity>

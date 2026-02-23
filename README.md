@@ -1,53 +1,24 @@
-> Edited for use in IDX on 07/09/12
+<p align="center"><img src="./assets/images/Logo - Party Games.svg" style="border-radius: 35%" width="256"></p>
 
-# Welcome to your Expo app 👋
+<p align="center">Jogos para passar o celular entre a galera. Escrito em React-Native</p>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+# Party Games
+![GitHub License](https://img.shields.io/github/license/brunomsesana/party-games-react-native)
+![Static Badge](https://img.shields.io/badge/brunomsesana-Party%20Games-purple)
 
-## Get started
 
-#### Android
+## Sobre o projeto
+### Jogos Inclusos:
 
-Android previews are defined as a `workspace.onStart` hook and started as a vscode task when the workspace is opened/started.
+**Infiltrado:** Um jogo de dedução social onde os jogadores devem descobrir quem não conhece a palavra secreta.
 
-Note, if you can't find the task, either:
-- Rebuild the environment (using command palette: `IDX: Rebuild Environment`), or
-- Run `npm run android -- --tunnel` command manually run android and see the output in your terminal. The device should pick up this new command and switch to start displaying the output from it.
+## Instalação
+### Play Store
 
-In the output of this command/task, you'll find options to open the app in a
+<a href='https://play.google.com/store/apps/details?id=com.brunomsesana.partygames'><img width='240' alt='Download Party Games on Play Store' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png?hl=pt-br'/></a>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Capturas de tela
 
-You'll also find options to open the app's developer menu, reload the app, and more.
-
-#### Web
-
-Web previews will be started and managred automatically. Use the toolbar to manually refresh.
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+![](https://play-lh.googleusercontent.com/SmVZ34UklR-bRPc6k7oXy5fAo1EI9-Wat_D0yLqWzHLUstKhIliJEbk-nYAju63lNeLq3S6hjvjEI1bYD6zoAA=w2560-h1440-rw)
+![](https://play-lh.googleusercontent.com/JoXbdzadWb2HMjGKFVB42E3b1RQrHoIbBFL8Xzzw2TO58Sqp1yT60rIp3hWcxyD62ImKUyhuZPfdwEBHR-WbGJQ=w2560-h1440-rw)
+![](https://play-lh.googleusercontent.com/GtFoCOrblNqm2H8CyPVmfz05mGWIxfudaTRIqueLfD-_BOOpYaO699xOavR1MK6TxFg0Mu3i_qo4wrjg-31x-A=w2560-h1440-rw)

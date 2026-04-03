@@ -53,11 +53,13 @@ export default function Games() {
             <TextP style={{ textAlign: "center" }}>{t("undercover")}</TextP>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.button, { opacity: 0.5 }]}
-            disabled={true}
+            style={styles.button}
+            onPress={() => {
+              router.push("/games/sleepingCity");
+            }}
           >
             <TextP style={{ textAlign: "center" }}>
-              {t("sleepingCity")} ({t("comingSoon")})
+              {t("sleepingCity")}
             </TextP>
           </TouchableOpacity>
           <TouchableOpacity

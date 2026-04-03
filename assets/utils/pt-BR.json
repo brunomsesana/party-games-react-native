@@ -67,6 +67,11 @@
   "revealUndercovers": "Revelar infiltrados",
   "goAdFree": "Remover Anúncios",
   "restorePurchases": "Restaurar Compras",
+  "roleCount": "Quantidade de {{role}}",
+  "roles": "Cargos",
+  "civileanCount": "Quantidade de civís",
+  "won": "Ganhou",
+  "rolesDesc": "Descrição dos cargos",
   "undercoverWords": {
     "Geografia": [
       { "word": "Antártida", "tip": "Isolado e branco" },
@@ -276,5 +281,47 @@
       { "word": "Software", "tip": "Não toca" },
       { "word": "Rede Social", "tip": "Gente online" }
     ]
-  }
+  },
+  "sleepingCityRoles": [
+    {
+      "role": "Assassino",
+      "desc": "Tenta matar uma pessoa por noite",
+      "intention": 0
+    },
+    {
+      "role": "Médico",
+      "desc": "Tenta salvar uma pessoa por noite",
+      "intention": 1
+    },
+    {
+      "role": "Detetive",
+      "desc": "Analisa o cargo de uma pessoa por noite",
+      "intention": 1
+    },
+    {
+      "role": "Enganador",
+      "desc": "Arma para uma pessoa por noite, fazendo-a parecer culpada",
+      "intention": 0
+    },
+    {
+      "role": "Médium",
+      "desc": "Recebe uma dica de um morto aleatório por noite",
+      "intention": 1
+    },
+    {
+      "role": "Lunático",
+      "desc": "Ganha quando é o mais votado durante o dia (ser morto durante a noite não conta)",
+      "intention": 2
+    },
+    {
+      "role": "Anfitrião",
+      "desc": "Convida alguém para sua casa toda noite, impossibilitando-a de agir",
+      "intention": 1
+    },
+    {
+      "role": "Metamorfo",
+      "desc": "Pode roubar o cargo de outra pessoa durante a noite, tornando-a o novo Metamorfo",
+      "intention": 2
+    }
+  ]
 }

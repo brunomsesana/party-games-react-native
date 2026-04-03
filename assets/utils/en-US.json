@@ -67,6 +67,11 @@
   "revealUndercovers": "Reveal undercover agents",
   "goAdFree": "Remove Ads",
   "restorePurchases": "Restore Purchases",
+  "roleCount": "{{role}} Count",
+  "roles": "Roles",
+  "civileanCount": "Civilean Count",
+  "won": "Won",
+  "rolesDesc": "Roles Description",
   "undercoverWords": {
     "Geography": [
       { "word": "Antarctica", "tip": "Isolated and white" },
@@ -276,5 +281,47 @@
       { "word": "Software", "tip": "Can't touch it" },
       { "word": "Social Network", "tip": "People online" }
     ]
-  }
+  },
+  "sleepingCityRoles": [
+    {
+      "role": "Murderer",
+      "desc": "Tries to murder someone every night",
+      "intention": 0
+    },
+    {
+      "role": "Doctor",
+      "desc": "Tries to save someone every night",
+      "intention": 1
+    },
+    {
+      "role": "Detective",
+      "desc": "Analyzes someone else's role every night",
+      "intention": 1
+    },
+    {
+      "role": "Framer",
+      "desc": "Frames someone every night, making them seem guilty",
+      "intention": 0
+    },
+    {
+      "role": "Medium",
+      "desc": "Receives a one-word tip from a random dead player every night",
+      "intention": 1
+    },
+    {
+      "role": "Jester",
+      "desc": "Wins if voted out during the day (being killed at night does not count)",
+      "intention": 2
+    },
+    {
+      "role": "Host",
+      "desc": "Invites someone to their home every night, preventing them from acting",
+      "intention": 1
+    },
+    {
+      "role": "Shapeshifter",
+      "desc": "Steals someone's role at night, turning them into the new Shapeshifter",
+      "intention": 2
+    }
+  ]
 }

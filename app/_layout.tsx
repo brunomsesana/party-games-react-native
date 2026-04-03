@@ -3,16 +3,16 @@ import { GamesProvider } from "@/contexts/GamesContext";
 import { PlayerProvider } from "@/contexts/PlayersContext";
 import { Stack } from "expo-router";
 import { useEffect } from "react";
-import mobileAds from 'react-native-google-mobile-ads';
+import mobileAds from "react-native-google-mobile-ads";
 
 export default function RootLayout() {
   useEffect(() => {
     mobileAds()
-    .initialize()
-    .then(adapterStatuses => {
-      // Initialization complete!
-    });
-  }, [])
+      .initialize()
+      .then((adapterStatuses) => {
+        // Initialization complete!
+      });
+  }, []);
   return (
     <PlayerProvider>
       <GamesProvider>
@@ -46,6 +46,10 @@ export default function RootLayout() {
             options={{
               headerShown: false,
             }}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="games/sleepingCity/index"
+            options={{ headerShown: false }}
           ></Stack.Screen>
         </Stack>
       </GamesProvider>

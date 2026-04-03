@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export const GamesContext = createContext<{
   undercoverConfig: {
@@ -13,6 +14,16 @@ export const GamesContext = createContext<{
     scoring: boolean;
     time: number;
   }) => void;
+  sleepingCityConfig: {
+    roles: number[],
+    time: number;
+    scoring: boolean;
+  },
+  setSleepingCityConfig: (sleepingCityConfig: {
+    roles: number[],
+    time: number;
+    scoring: boolean;
+  }) => void;
 }>({
   undercoverConfig: {
     undercoverCount: 0,
@@ -21,9 +32,16 @@ export const GamesContext = createContext<{
     time: 0
   },
   setUndercoverConfig: () => {},
+  sleepingCityConfig: {
+    roles: [],
+    time: 0,
+    scoring: true
+  },
+  setSleepingCityConfig: () => {}
 });
 
 export const GamesProvider = ({ children }: { children: React.ReactNode }) => {
+  const { t } = useTranslation();
   const [undercoverConfig, setUndercoverConfig] = useState<{
     undercoverCount: number;
     themes: number[];
@@ -35,12 +53,19 @@ export const GamesProvider = ({ children }: { children: React.ReactNode }) => {
     scoring: true,
     time: 0
   });
-  const [undercoverScore, setUndercoverScore] = useState<{
-    player: number;
-    score: number;
-  }[]>([])
+  const [sleepingCityConfig, setSleepingCityConfig] = useState<
+    {
+      roles: number[],
+      time: number;
+      scoring: boolean;
+    }
+  >({
+    roles: Object.keys(t("sleepingCityRoles", { returnObjects: true })).map((_, i) => i == 0 ? 1 : 0),
+    time: 0,
+    scoring: true
+  })
   return (
-    <GamesContext value={{ undercoverConfig, setUndercoverConfig }}>
+    <GamesContext value={{ undercoverConfig, setUndercoverConfig, sleepingCityConfig, setSleepingCityConfig }}>
       {children}
     </GamesContext>
   );

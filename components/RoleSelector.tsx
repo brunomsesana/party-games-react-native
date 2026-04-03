@@ -56,63 +56,67 @@ export default function RoleSelector({
             borderBottomWidth: 2,
           }}
         >
-          {Object.keys(t("sleepingCityRoles", { returnObjects: true })).map(
-            (x, i) => (
-              <View
-                style={[
-                  styles.button,
-                  tempSleepingCityConfig.roles[i] > 0 && {
-                    backgroundColor: "lightgreen",
-                    borderColor: "green",
-                    borderWidth: 2,
-                  },
-                  {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  },
-                ]}
-                key={i}
+          {(
+            t("sleepingCityRoles", { returnObjects: true }) as {
+              role: string;
+              intention: string;
+              desc: string;
+            }[]
+          ).map((x, i) => (
+            <View
+              style={[
+                styles.button,
+                tempSleepingCityConfig.roles[i] > 0 && {
+                  backgroundColor: "lightgreen",
+                  borderColor: "green",
+                  borderWidth: 2,
+                },
+                {
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                },
+              ]}
+              key={i}
+            >
+              <TouchableOpacity
+                style={[styles.button, { marginBottom: 0 }]}
+                onPress={() => {
+                  if (tempSleepingCityConfig.roles[i] > (i == 0 ? 1 : 0)) {
+                    setTempSleepingCityConfig({
+                      ...tempSleepingCityConfig,
+                      roles: tempSleepingCityConfig.roles.map((y, j) =>
+                        i === j ? y - 1 : y,
+                      ),
+                    });
+                    setNoRole((prev) => prev + 1);
+                  }
+                }}
               >
-                <TouchableOpacity
-                  style={[styles.button, { marginBottom: 0 }]}
-                  onPress={() => {
-                    if (tempSleepingCityConfig.roles[i] > (i == 0 ? 1 : 0)) {
-                      setTempSleepingCityConfig({
-                        ...tempSleepingCityConfig,
-                        roles: tempSleepingCityConfig.roles.map((y, j) =>
-                          i === j ? y - 1 : y
-                        ),
-                      });
-                      setNoRole(prev => prev + 1);
-                    }
-                  }}
-                >
-                  <TextP>-</TextP>
-                </TouchableOpacity>
-                <TextP style={{ textAlign: "center", width: "70%" }}>
-                  {t("roleCount", { role: x })}:{" "}
-                  {tempSleepingCityConfig.roles[i]}
-                </TextP>
-                <TouchableOpacity
-                  style={[styles.button, { marginBottom: 0 }]}
-                  onPress={() => {
-                    if (i == 0 ? noRole > 2 : noRole > 0) {
-                      setTempSleepingCityConfig({
-                        ...tempSleepingCityConfig,
-                        roles: tempSleepingCityConfig.roles.map((y, j) =>
-                          i === j ? y + 1 : y
-                        ),
-                      });
-                      setNoRole(prev => prev - 1);
-                    }
-                  }}
-                >
-                  <TextP>+</TextP>
-                </TouchableOpacity>
-              </View>
-            )
-          )}
+                <TextP>-</TextP>
+              </TouchableOpacity>
+              <TextP style={{ textAlign: "center", width: "70%" }}>
+                {t("roleCount", { role: x.role })}:{" "}
+                {tempSleepingCityConfig.roles[i]}
+              </TextP>
+              <TouchableOpacity
+                style={[styles.button, { marginBottom: 0 }]}
+                onPress={() => {
+                  if (i == 0 ? noRole > 2 : noRole > 0) {
+                    setTempSleepingCityConfig({
+                      ...tempSleepingCityConfig,
+                      roles: tempSleepingCityConfig.roles.map((y, j) =>
+                        i === j ? y + 1 : y,
+                      ),
+                    });
+                    setNoRole((prev) => prev - 1);
+                  }
+                }}
+              >
+                <TextP>+</TextP>
+              </TouchableOpacity>
+            </View>
+          ))}
         </ScrollView>
         <TouchableOpacity
           style={[

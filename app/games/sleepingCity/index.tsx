@@ -13,7 +13,11 @@ export default function SleepingCity() {
   const { sleepingCityConfig } = useContext(GamesContext);
   const { players, updatePlayers } = useContext(PlayerContext);
   const { t } = useTranslation();
-  const roles = Object.keys(t("sleepingCityRoles", { returnObjects: true }));
+  const roles = t("sleepingCityRoles", { returnObjects: true }) as {
+    role: string;
+    intention: number;
+    desc: string;
+  }[];
   const router = useRouter();
   const [rolesDescOpen, setRolesDescOpen] = useState(false);
   const [scoreOpen, setScoreOpen] = useState(false);
@@ -43,19 +47,17 @@ export default function SleepingCity() {
                 {t("rolesDesc")}:
               </TextP>
             </View>
-            {Object.entries(t("sleepingCityRoles", { returnObjects: true }) as Array<Record<string, string>>).map(([role, desc], i) => 
+            {roles.map((x, i) => (
               <TextP
                 style={{
                   textAlign: "center",
                 }}
                 key={i}
               >
-                <TextP style={{ fontWeight: "bold" }}>
-                  {role}:{" "}
-                </TextP>
-                {desc}
+                <TextP style={{ fontWeight: "bold" }}>{x.role}: </TextP>
+                {x.desc}
               </TextP>
-            )}
+            ))}
           </View>
         </View>
       )}
@@ -173,7 +175,7 @@ export default function SleepingCity() {
                 ? t("roles") +
                   ": " +
                   sleepingCityConfig.roles
-                    .map((x, i) => x > 0 && roles[i])
+                    .map((x, i) => x > 0 && roles[i].role)
                     .filter(Boolean)
                     .join(", ")
                 : t("selectRoles")}
@@ -204,7 +206,7 @@ export default function SleepingCity() {
                   borderColor: "black",
                 },
               ]}
-              onPress={() => router.push("/games/undercover/play")}
+              onPress={() => router.push("/games/sleepingCity/play")}
             >
               <TextP style={{ textAlign: "center", color: "white" }}>
                 {t("play")}

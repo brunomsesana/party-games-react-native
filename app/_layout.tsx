@@ -51,6 +51,10 @@ export default function RootLayout() {
             name="games/sleepingCity/index"
             options={{ headerShown: false }}
           ></Stack.Screen>
+          <Stack.Screen
+            name="games/sleepingCity/play"
+            options={{ headerShown: false }}
+          ></Stack.Screen>
         </Stack>
       </GamesProvider>
     </PlayerProvider>

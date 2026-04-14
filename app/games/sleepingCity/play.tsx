@@ -56,7 +56,11 @@ export default function SleepingCityPlay() {
       setTurn(0);
     }
   }
-  function handleKill() {}
+  function handleKill() {
+    setTargetedPlayers([...selectedPlayers]);
+    setSelectedPlayers([]);
+    handleNext();
+  }
   const [turn, setTurn] = useState(0);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -78,56 +82,92 @@ export default function SleepingCityPlay() {
               )[gameData[turn]].role
             : t("civilean")}
         </TextP>
-        {gameData[turn] == 0 ? (
+        {gameData[turn] == 0 ? ( //Se for assassino
           <>
             <TextP>{t("whoToKill")}</TextP>
             {(targetedPlayers.length > 0 ? targetedPlayers : players).map(
-              (x, i) =>
-                (gameData[i] == undefined
-                  ? 1
-                  : (
-                      t("sleepingCityRoles", { returnObjects: true }) as {
-                        role: string;
-                        desc: string;
-                        intention: number;
-                      }[]
-                    )[gameData[i]].intention) != 0 && (
-                  <TouchableOpacity
-                    style={[
-                      styles.button,
-                      selectedPlayers.includes(i)
-                        ? {
-                            backgroundColor: "lightgreen",
-                            borderColor: "green",
-                            borderWidth: 3,
-                          }
-                        : null,
-                    ]}
-                    onPress={() => {
-                      selectedPlayers.includes(i)
-                        ? setSelectedPlayers(
-                            selectedPlayers.filter((y) => y != i),
-                          )
-                        : setSelectedPlayers([...selectedPlayers, i]);
-                    }}
-                    key={i}
-                  >
-                    <TextP>{typeof x == "number" ? players[x] : x.name}</TextP>
-                  </TouchableOpacity>
-                ),
+              (x, i) => {
+                // Se x for um número (veio do targetedPlayers), o índice real é x.
+                // Se for objeto (veio do players), o índice real é i.
+                const actualIndex = typeof x === "number" ? x : i;
+
+                return (
+                  (gameData[actualIndex] == undefined
+                    ? 1
+                    : (
+                        t("sleepingCityRoles", { returnObjects: true }) as {
+                          role: string;
+                          desc: string;
+                          intention: number;
+                        }[]
+                      )[gameData[actualIndex]].intention) != 0 && (
+                    <TouchableOpacity
+                      style={[
+                        styles.button,
+                        selectedPlayers.includes(actualIndex)
+                          ? {
+                              backgroundColor: "lightgreen",
+                              borderColor: "green",
+                              borderWidth: 3,
+                            }
+                          : null,
+                      ]}
+                      onPress={() => {
+                        selectedPlayers.includes(actualIndex)
+                          ? setSelectedPlayers(
+                              selectedPlayers.filter((y) => y != actualIndex),
+                            )
+                          : selectedPlayers.length <
+                              (targetedPlayers.length > 0
+                                ? targetedPlayers.length - 1
+                                : sleepingCityConfig.roles[0]) &&
+                            setSelectedPlayers([
+                              ...selectedPlayers,
+                              actualIndex,
+                            ]);
+                      }}
+                      key={actualIndex}
+                    >
+                      <TextP>
+                        {typeof x == "number" ? players[x].name : x.name}
+                      </TextP>
+                    </TouchableOpacity>
+                  )
+                );
+              },
             )}
           </>
         ) : (
           gameData[turn] == 1
         )}
         <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            if (gameData[turn] == 0) {
-              handleKill();
-            }
-            handleNext();
-          }}
+          style={[
+            styles.button,
+            gameData[turn] == 0 &&
+              !(
+                selectedPlayers.length ==
+                (targetedPlayers.length > 0
+                  ? targetedPlayers.length - 1
+                  : sleepingCityConfig.roles[0])
+              ) && { opacity: 0.5 },
+          ]}
+          disabled={
+            gameData[turn] == 0 &&
+            !(
+              selectedPlayers.length ==
+              (targetedPlayers.length > 0
+                ? targetedPlayers.length - 1
+                : sleepingCityConfig.roles[0])
+            )
+          }
+          onPress={() =>
+            gameData[turn] == 0
+              ? selectedPlayers.length ==
+                  (targetedPlayers.length > 0
+                    ? targetedPlayers.length - 1
+                    : sleepingCityConfig.roles[0]) && handleKill()
+              : handleNext()
+          }
         >
           <TextP style={{ textAlign: "center" }}>
             {gameData[turn] == 0 ? t("confirm") : t("nextPlayer")}

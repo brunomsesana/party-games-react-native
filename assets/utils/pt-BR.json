@@ -73,6 +73,8 @@
   "civilean": "Civíl",
   "won": "Ganhou",
   "rolesDesc": "Descrição dos cargos",
+  "youAre": "Você é",
+  "whoToKill": "Quem você quer matar?",
   "undercoverWords": {
     "Geografia": [
       { "word": "Antártida", "tip": "Isolado e branco" },

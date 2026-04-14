@@ -73,6 +73,8 @@
   "civilean": "Civilean",
   "won": "Won",
   "rolesDesc": "Roles Description",
+  "youAre": "You are",
+  "whoToKill": "Who do you want to kill?",
   "undercoverWords": {
     "Geography": [
       { "word": "Antarctica", "tip": "Isolated and white" },
